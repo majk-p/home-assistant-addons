@@ -1,5 +1,5 @@
 ---
-version: 1.0.0
+version: 1.0.1
 slug: reverse-ssh-tunnel
 name: Reverse SSH Tunnel
 description: Allow reverse SSH tunnel to your Home Assistant instance to externalize it via reverse proxy
