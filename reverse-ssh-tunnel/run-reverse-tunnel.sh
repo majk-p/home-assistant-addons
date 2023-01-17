@@ -1,13 +1,17 @@
 #!/usr/bin/env bashio
 
+bashio::log.info "Reverse tunnel initializing."
+
 CONFIG_PATH=/data/options.json
 key_file=/private.key
+
+bashio::log.info "Variables set, reading configuration."
 
 username=$(bashio::config 'username')
 host=$(bashio::config 'server.host')
 port=$(bashio::config 'server.port')
 
-bashio::log.info "Reverse tunnel initializing for $username@$host"
+bashio::log.info "Reverse tunnel configured for $username@$host"
 
 if bashio::config.exists 'private_key'; then
 
