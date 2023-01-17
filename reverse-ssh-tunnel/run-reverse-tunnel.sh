@@ -6,6 +6,7 @@ CONFIG_PATH=/data/options.json
 key_file=/private.key
 
 bashio::log.info "Variables set, reading configuration."
+bashio::log.info "Configuration debug:"
 bashio::addon.config
 
 username=$(bashio::config 'username')
