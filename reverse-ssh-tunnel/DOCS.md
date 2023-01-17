@@ -22,15 +22,18 @@ Reverse tunel details
 Add-on configuration:
 
 ```yaml
-authorized_keys:
-  - "ssh-rsa AKDJD3839...== my-key"
-password: ''
-apks: []
-server:
-  tcp_forwarding: false
+options:
+  username: "tuneluser"
+  private_key: >
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1r...AAdzc2gtcn
+    UxMvBwZyEoQS...CRDAWXHb92
+    -----END OPENSSH PRIVATE KEY-----
+  password: null
+  server:
+    host: "myserver.com"
+    port: 9090
 ```
-
-### Option: `apks`
 
 ## Externalization using reverse tunnel
 

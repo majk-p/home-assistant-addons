@@ -6,6 +6,7 @@ description: Allow reverse SSH tunnel to your Home Assistant instance to externa
 url: https://github.com/majk-p/home-assistant-addons/tree/main/reverse-ssh-tunnel
 image: "ghcr.io/majk-p/{arch}-reverse-ssh-tunnel"
 advanced: true
+init: false
 arch:
   - armhf
   - armv7
@@ -27,8 +28,8 @@ options:
 
 schema:
   username: str
-  private_key: password?
-  password: password?
+  private_key: "password?"
+  password: "password?"
   server:
     host: str
     port: int
