@@ -31,6 +31,6 @@ schema:
   password: password?
   server:
     host: str
-    port: integer
+    port: int
 
 
