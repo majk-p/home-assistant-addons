@@ -2,7 +2,6 @@
 version: 1.0.3
 hassio_api: true
 homeassistant_api: true
-hassio_role: default
 slug: reverse-ssh-tunnel
 name: Reverse SSH Tunnel
 description: Allow reverse SSH tunnel to your Home Assistant instance to externalize it via reverse proxy
