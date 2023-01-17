@@ -16,7 +16,6 @@ map:
   - config:ro
 panel_icon: mdi:console
 panel_title: Reverse SSH Tunnel
-startup: application
 
 options:
   username: null
