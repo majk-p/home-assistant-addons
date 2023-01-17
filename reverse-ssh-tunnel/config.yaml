@@ -1,0 +1,37 @@
+---
+version: 1.0.0
+slug: reverse-ssh-tunnel
+name: Reverse SSH Tunnel
+description: Allow reverse SSH tunnel to your Home Assistant instance to externalize it via reverse proxy
+url: https://github.com/majk-p/home-assistant-addons/tree/main/reverse-ssh-tunnel
+# image: "ghcr.io/majk-p/{arch}-reverse-ssh-tunnel"
+advanced: true
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+map:
+  - config:ro
+panel_icon: mdi:console
+panel_title: Reverse SSH Tunnel
+startup: application
+
+options:
+  username: null
+  private_key: null
+  password: null
+  server:
+    host: null
+    port: 9090
+
+schema:
+  username: str
+  private_key: password?
+  password: password?
+  server:
+    host: str
+    port: integer
+
+

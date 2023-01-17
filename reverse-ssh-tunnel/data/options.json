@@ -1,0 +1,8 @@
+{
+    "username": "homeproxy",
+    "private_key": "xyz",
+    "server": {
+        "host": "ha.michalp.net",
+        "port": 9090
+    }
+}

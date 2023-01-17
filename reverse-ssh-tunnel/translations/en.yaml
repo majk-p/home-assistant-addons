@@ -1,0 +1,18 @@
+---
+configuration:
+  username: 
+    name: User name
+    description: User name used for opening the tunnel
+  private_key:
+    name: Private key
+    description: Private key used for authentication, if present, it will be preferred over password
+  password:
+    name: Password
+    description: Password for the ssh user, not recommended, used only when private key is empty
+  server:
+    host: 
+      name: Hostname
+      description: Reverse proxy server host
+    port:
+      name: Port
+      description: Port under which the reverse tunnel will be open on host machine, by default it's 9090
