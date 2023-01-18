@@ -2,7 +2,6 @@
 
 bashio::log.info "Reverse tunnel initializing."
 
-CONFIG_PATH=/data/options.json
 key_file=/private.key
 
 bashio::log.info "Variables set, reading configuration."
@@ -18,6 +17,7 @@ if bashio::config.exists 'private_key'; then
   bashio::log.info "Using private key authorization"
 
   echo $(bashio::config 'private_key') > $key_file
+  cat $key_file
   chmod 600 $key_file
 
   bashio::log.info "Initializing the ssh tunnel"

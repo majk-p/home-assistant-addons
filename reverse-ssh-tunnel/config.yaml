@@ -1,5 +1,5 @@
 ---
-version: 1.0.8
+version: 1.0.9
 hassio_api: true
 init: false
 advanced: true
@@ -31,10 +31,10 @@ options:
 
 schema:
   username: str
-  private_key: "password?"
-  password: "password?"
+  private_key: str
+  password: password?
   server:
     host: str
-    port: int
+    port: port
 
 

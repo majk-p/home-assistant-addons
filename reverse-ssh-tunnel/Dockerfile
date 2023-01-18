@@ -6,13 +6,9 @@ USER root
 RUN \
     set -x \ 
     && apk add --no-cache \
-        bash-completion \
         libuv \
-        nano \
-        curl \
         openssh \
-        sshpass \
-        vim
+        sshpass
 COPY run.sh /
 RUN chmod a+x /run.sh
 
