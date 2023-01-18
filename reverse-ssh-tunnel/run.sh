@@ -18,6 +18,7 @@ if bashio::config.exists 'private_key'; then
   bashio::log.info "Using private key authorization"
 
   echo $(bashio::config 'private_key') > $key_file
+  chmod 600 $key_file
 
   bashio::log.info "Initializing the ssh tunnel"
   ssh -o StrictHostKeyChecking=no \

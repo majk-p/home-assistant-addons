@@ -1,8 +1,7 @@
 ---
-version: 1.0.7
+version: 1.0.8
 hassio_api: true
 init: false
-hassio_role: manager
 advanced: true
 slug: reverse-ssh-tunnel
 name: Reverse SSH Tunnel
