@@ -9,10 +9,11 @@ RUN \
         bash-completion \
         libuv \
         nano \
+        curl \
         openssh \
         sshpass \
         vim
-COPY run-reverse-tunnel.sh /
-RUN chmod a+x /run-reverse-tunnel.sh
+COPY run.sh /
+RUN chmod a+x /run.sh
 
-CMD ["/run-reverse-tunnel.sh"]
+CMD ["/run.sh"]

@@ -1,9 +1,16 @@
-#!/usr/bin/env bashio
+#!/usr/bin/with-contenv bashio
 
 bashio::log.info "Reverse tunnel initializing."
 
 CONFIG_PATH=/data/options.json
 key_file=/private.key
+
+bashio::log.info "Debug ENV:"
+env
+
+bashio::log.info "Debug reading config"
+
+curl -X GET -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" -H "Content-Type: application/json" http://supervisor/core/api/config
 
 bashio::log.info "Variables set, reading configuration."
 bashio::log.info "Configuration debug:"

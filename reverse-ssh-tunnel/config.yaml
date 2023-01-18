@@ -1,14 +1,15 @@
 ---
-version: 1.0.5
+version: 1.0.6
 hassio_api: true
+init: false
 hassio_role: manager
+advanced: true
 slug: reverse-ssh-tunnel
 name: Reverse SSH Tunnel
-description: Allow reverse SSH tunnel to your Home Assistant instance to externalize it via reverse proxy
+description: >-
+  Allow reverse SSH tunnel to your Home Assistant instance to externalize it via reverse proxy
 url: https://github.com/majk-p/home-assistant-addons/tree/main/reverse-ssh-tunnel
 image: "ghcr.io/majk-p/{arch}-reverse-ssh-tunnel"
-advanced: true
-init: false
 arch:
   - armhf
   - armv7
@@ -17,6 +18,7 @@ arch:
   - i386
 map:
   - config:ro
+
 panel_icon: mdi:console
 panel_title: Reverse SSH Tunnel
 
