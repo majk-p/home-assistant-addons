@@ -16,10 +16,8 @@ if bashio::config.exists 'private_key'; then
 
   bashio::log.info "Using private key authorization"
 
-  echo $(bashio::config 'private_key' | sed 's/\\n$/\n/g')
-  printf "%b" "$(bashio::config 'private_key')"
-
-  echo $(bashio::config 'private_key') | sed 's/\\n$/\n/g' > $key_file
+  printf "%b" "$(bashio::config 'private_key')" > $key_file
+  # echo $(bashio::config 'private_key') | sed 's/\\n$/\n/g' > $key_file
   cat $key_file
   chmod 600 $key_file
 
