@@ -5,16 +5,7 @@ bashio::log.info "Reverse tunnel initializing."
 CONFIG_PATH=/data/options.json
 key_file=/private.key
 
-bashio::log.info "Debug ENV:"
-env
-
-bashio::log.info "Debug reading config"
-
-curl -X GET -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" -H "Content-Type: application/json" http://supervisor/core/api/config
-
 bashio::log.info "Variables set, reading configuration."
-bashio::log.info "Configuration debug:"
-bashio::addon.config
 
 username=$(bashio::config 'username')
 host=$(bashio::config 'server.host')
@@ -26,7 +17,7 @@ if bashio::config.exists 'private_key'; then
 
   bashio::log.info "Using private key authorization"
 
-  $(bashio::config 'private_key') > $key_file
+  echo $(bashio::config 'private_key') > $key_file
 
   bashio::log.info "Initializing the ssh tunnel"
   ssh -o StrictHostKeyChecking=no \
