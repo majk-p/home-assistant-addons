@@ -28,7 +28,9 @@ if bashio::config.exists 'private_key'; then
     -i $key_file \
     -R 9090:homeassistant.local:8123 \
     $username@$host &
+  sleep 1m
   bashio::log.info "Waiting forever"
+  sleep 1d
   read 
 elif bashio::config.exists 'password'; then
   bashio::log.info "Using password authorization"
