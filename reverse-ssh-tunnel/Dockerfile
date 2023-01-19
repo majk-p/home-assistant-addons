@@ -8,10 +8,10 @@ RUN \
     && apk add --no-cache \
         libuv \
         openssh \
-        sshpass
+        autossh
 COPY run.sh /
 RUN chmod a+x /run.sh
 
 
 # TODO move run to s6 overlay service
-CMD ["/run.sh"]
+# CMD ["/run.sh"]

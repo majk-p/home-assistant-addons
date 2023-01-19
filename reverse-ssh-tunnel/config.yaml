@@ -1,5 +1,5 @@
 ---
-version: 1.0.18
+version: 1.0.19
 hassio_api: true
 init: false
 advanced: true
@@ -24,15 +24,15 @@ panel_title: Reverse SSH Tunnel
 options:
   username: null
   private_key: null
-  password: null
+  # password: null
   server:
     host: null
     port: 9090
 
 schema:
   username: str
-  private_key: str?
-  password: password?
+  private_key: password
+  # password: password?
   server:
     host: str
     port: port
