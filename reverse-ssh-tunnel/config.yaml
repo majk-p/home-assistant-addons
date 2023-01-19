@@ -1,5 +1,5 @@
 ---
-version: 1.0.19
+version: 1.0.20
 hassio_api: true
 init: false
 advanced: true
