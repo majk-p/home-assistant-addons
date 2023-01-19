@@ -12,4 +12,6 @@ RUN \
 COPY run.sh /
 RUN chmod a+x /run.sh
 
+
+# TODO move run to s6 overlay service
 CMD ["/run.sh"]
