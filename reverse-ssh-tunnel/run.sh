@@ -27,11 +27,11 @@ if bashio::config.exists 'private_key'; then
     -o PasswordAuthentication=no \
     -i $key_file \
     -R 9090:homeassistant.local:8123 \
+    -N \
     $username@$host &
-  sleep 1m
-  bashio::log.info "Waiting forever"
-  sleep 1d
-  read 
+
+  bashio::log.info "Keeping connection alive forever"
+  while true; do sleep 10; done
 elif bashio::config.exists 'password'; then
   bashio::log.info "Using password authorization"
 
