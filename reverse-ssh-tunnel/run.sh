@@ -24,7 +24,7 @@ autossh -M 2000 -o StrictHostKeyChecking=no \
   -o PubkeyAuthentication=yes \
   -o PasswordAuthentication=no \
   -i $key_file \
-  -R 9090:homeassistant.local:8123 \
+  -R $port:homeassistant.local:8123 \
   -N \
   $username@$host &
 
