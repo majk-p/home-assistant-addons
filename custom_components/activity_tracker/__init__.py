@@ -14,8 +14,10 @@ Setup wires a config entry to:
 
 from __future__ import annotations
 
+import json
 import logging
 from pathlib import Path
+from typing import Final
 
 from homeassistant.components import frontend
 from homeassistant.components.http import StaticPathConfig
@@ -49,7 +51,13 @@ PLATFORMS: list[Platform] = [
 _LOGGER = logging.getLogger(__name__)
 
 #: URL the strategy script is served at (and auto-loaded from).
-STRATEGY_JS_URL = "/activity_tracker/activity-tracker-strategy.js"
+_MANIFEST = json.loads((Path(__file__).parent / "manifest.json").read_text(encoding="utf-8"))
+MANIFEST_VERSION: Final = _MANIFEST["version"]
+
+# Version-stamped URL: every release is a fresh URL, so no browser, proxy or
+# webview can ever serve a stale copy of the strategy from cache (a fixed URL
+# with heuristic caching once left an old script running after an update).
+STRATEGY_JS_URL: Final = f"/activity_tracker/strategy-{MANIFEST_VERSION}.js"
 
 #: hass.data[DOMAIN] flag guarding the once-per-run frontend registration.
 _FRONTEND_REGISTERED = "frontend_registered"
@@ -58,9 +66,9 @@ _FRONTEND_REGISTERED = "frontend_registered"
 async def _async_register_frontend(hass: HomeAssistant) -> None:
     """Serve and auto-load the dashboard strategy, once per HA run.
 
-    1. Serves ``frontend/activity-tracker-strategy.js`` as a static path
-       (``cache_headers=False`` so an integration update is picked up after
-       a page reload — the URL is fixed and cannot carry a version query).
+    1. Serves the strategy script as a static path under a version-stamped
+       URL (``/activity_tracker/strategy-<version>.js``, long-cacheable:
+       each release is a new URL, so caches can never serve a stale copy).
     2. Registers it with ``frontend.add_extra_js_url``, which injects it as
        a module into the frontend of every dashboard: the strategy element
        defines itself and (on 2026.5+) its picker metadata on load.
@@ -86,7 +94,7 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
         return
     strategy_js = Path(__file__).parent / "frontend" / "activity-tracker-strategy.js"
     await hass.http.async_register_static_paths(
-        [StaticPathConfig(STRATEGY_JS_URL, str(strategy_js), False)]
+        [StaticPathConfig(STRATEGY_JS_URL, str(strategy_js), True)]
     )
     frontend.add_extra_js_url(hass, STRATEGY_JS_URL)
     hass.data[DOMAIN][_FRONTEND_REGISTERED] = True
