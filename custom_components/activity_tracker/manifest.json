@@ -7,5 +7,5 @@
   "integration_type": "helper",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/majk-p/home-assistant-addons/issues",
-  "version": "1.2.0"
+  "version": "1.2.1"
 }

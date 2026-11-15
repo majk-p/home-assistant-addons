@@ -453,18 +453,12 @@ class ActivityTrackerDashboardStrategy extends HTMLElement {
   }
 }
 
-function registerStrategy() {
-  // The resource may be loaded twice (extra module URL + a manually added
-  // resource); defining the same tag twice throws.
-  if (customElements.get(ELEMENT_TAG)) {
-    return;
-  }
-  customElements.define(ELEMENT_TAG, ActivityTrackerDashboardStrategy);
-
-  // 2026.5+ frontends read this list when the user adds a dashboard, and
-  // show "Activity Tracker" under the community/custom dashboards. Older
-  // frontends never look at it, so the push is inert there.
-  window.customStrategies = window.customStrategies || [];
+// Register with the 2026.5+ Add-dashboard picker SYNCHRONOUSLY, at script
+// load — the dialog reads window.customStrategies the moment it opens (its
+// resource wait can resolve instantly), so an async registration loses the
+// race and the entry never shows. The push needs no card helpers.
+window.customStrategies = window.customStrategies || [];
+if (!window.customStrategies.some((s) => s && s.type === STRATEGY_NAME)) {
   window.customStrategies.push({
     type: STRATEGY_NAME,
     strategyType: "dashboard",
@@ -474,6 +468,15 @@ function registerStrategy() {
     documentationURL:
       "https://github.com/majk-p/home-assistant-addons/tree/main/custom_components/activity_tracker",
   });
+}
+
+function registerStrategy() {
+  // The resource may be loaded twice (extra module URL + a manually added
+  // resource); defining the same tag twice throws.
+  if (customElements.get(ELEMENT_TAG)) {
+    return;
+  }
+  customElements.define(ELEMENT_TAG, ActivityTrackerDashboardStrategy);
 }
 
 if (typeof window.loadCardHelpers === "function") {
