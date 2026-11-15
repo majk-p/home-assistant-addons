@@ -6,11 +6,19 @@ Setup wires a config entry to:
 - the entity platforms (button, sensor, number, binary_sensor),
 - a local-midnight listener (today-counter rollover, DST safe) and a
   60 s periodic feeding-due check (both cancelled automatically on unload
-  via ``entry.async_on_unload``).
+  via ``entry.async_on_unload``),
+- the dashboard strategy resource (see frontend/): served over HTTP and
+  auto-loaded by the frontend, once per Home Assistant run, so installing
+  the integration provides its dashboard without any pasted YAML.
 """
 
 from __future__ import annotations
 
+import logging
+from pathlib import Path
+
+from homeassistant.components import frontend
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, callback
@@ -38,12 +46,59 @@ PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
 ]
 
+_LOGGER = logging.getLogger(__name__)
+
+#: URL the strategy script is served at (and auto-loaded from).
+STRATEGY_JS_URL = "/activity_tracker/activity-tracker-strategy.js"
+
+#: hass.data[DOMAIN] flag guarding the once-per-run frontend registration.
+_FRONTEND_REGISTERED = "frontend_registered"
+
+
+async def _async_register_frontend(hass: HomeAssistant) -> None:
+    """Serve and auto-load the dashboard strategy, once per HA run.
+
+    1. Serves ``frontend/activity-tracker-strategy.js`` as a static path
+       (``cache_headers=False`` so an integration update is picked up after
+       a page reload — the URL is fixed and cannot carry a version query).
+    2. Registers it with ``frontend.add_extra_js_url``, which injects it as
+       a module into the frontend of every dashboard: the strategy element
+       defines itself and (on 2026.5+) its picker metadata on load.
+
+    Home Assistant core always sets up the ``http`` and ``frontend``
+    components before custom integration entries; the existence checks
+    keep headless setups without them (the test harness) working.
+    Static paths cannot be unregistered, and keeping the module
+    registered across entry removals is the friendlier behaviour, so the
+    registration deliberately stays for the rest of the run.
+    """
+    if hass.data[DOMAIN].get(_FRONTEND_REGISTERED):
+        return
+    if hass.http is None or frontend.DATA_EXTRA_MODULE_URL not in hass.data:
+        # Home Assistant core always sets up ``http`` and ``frontend``
+        # before custom integration entries; headless test setups may
+        # have neither — skip and try again on the next entry rather
+        # than fail child setup over the dashboard.
+        _LOGGER.debug(
+            "http/frontend not set up; deferring registration of %s",
+            STRATEGY_JS_URL,
+        )
+        return
+    strategy_js = Path(__file__).parent / "frontend" / "activity-tracker-strategy.js"
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(STRATEGY_JS_URL, str(strategy_js), False)]
+    )
+    frontend.add_extra_js_url(hass, STRATEGY_JS_URL)
+    hass.data[DOMAIN][_FRONTEND_REGISTERED] = True
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up one child from a config entry."""
     hass.data.setdefault(DOMAIN, {})
     runtime = await ChildRuntime.async_create(hass, entry)
     hass.data[DOMAIN][entry.entry_id] = runtime
+
+    await _async_register_frontend(hass)
 
     # One device per child groups all entities of the entry.
     device_registry = dr.async_get(hass)

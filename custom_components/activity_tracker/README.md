@@ -8,6 +8,12 @@ notifications. Everything is local — no MQTT, no add-on, no external
 services; state lives in a Home Assistant storage file and the local
 recorder/long-term statistics.
 
+The integration ships its own **dashboard** (a Lovelace *dashboard
+strategy*): once a child is configured, Home Assistant serves the strategy
+script automatically and "Activity Tracker" becomes a one-click dashboard
+— no YAML pasting, no manual resources, and every configured child (plus
+renames and new kids) is picked up automatically. See [Dashboard](#dashboard).
+
 ## Distributing from your own GitHub repo (add-ons repo or standalone)
 
 This is an integration, not an add-on — it cannot be installed through the
@@ -90,10 +96,55 @@ Marketplace-installable (irrelevant here, but good to know).
    bookkeeping) is persisted per child in `.storage/activity_tracker_<p>`
    and survives restarts.
 
+## Dashboard
+
+The integration provides its dashboard itself: on setup it serves
+`activity_tracker/frontend/activity-tracker-strategy.js` at
+`/activity_tracker/activity-tracker-strategy.js` and registers it as a
+frontend module, so the strategy element is loaded on every dashboard —
+no resource to add, nothing to paste. The dashboard is one section per
+child (overview table, feeding status with countdown, 8 button tiles,
+interval setting, four daily bar charts, 24 h timeline), generated from
+the live entity list, so it automatically includes every child you
+configure and follows renames and additions.
+
+**How to create it, per Home Assistant version:**
+
+- **HA 2026.5+** (verified against the current frontend source): add a
+  child, then **Settings → Dashboards → Add dashboard**. "Activity
+  Tracker" appears under the community dashboards heading — click it,
+  keep the suggested title/icon, done.
+- **Older HA (~2024.8–2026.4, incl. 2025.x)**: **Settings → Dashboards →
+  Add dashboard**, create it (empty is fine), then open it, enter edit
+  mode (pencil) → three-dot menu → **Raw configuration editor** and
+  replace everything with:
+
+  ```yaml
+  strategy:
+    type: custom:activity-tracker
+  ```
+
+  That's the whole dashboard: the strategy generates all views/cards.
+  (Optionally add `title: Activity Tracker` on top.)
+
+Notes:
+
+- You never paste card YAML. `dashboard.example.yaml` stays in the repo
+  as the **fallback/reference** for a hand-built view (e.g. embedded in
+  an existing dashboard) — same cards, same layout.
+- Refresh behaviour: entity-driven cards (tiles, counters, charts,
+  logbook) are always live. The computed overview/feeding-status texts
+  follow HA's strategy rules: on 2026.x frontends they re-render on
+  every relevant state change; on 2025.x frontends they refresh when the
+  dashboard is (re)opened or the browser reloads the panel.
+- Strategy card titles and labels are English in v1 (like
+  `dashboard.example.yaml`); see Localization.
+
 ## Usage
 
-- Press the dashboard tiles (see `dashboard.example.yaml` — find & replace
-  `rob`/`Robert`) or call `button.press` on any event button. Undo buttons
+- Press the dashboard tiles of the [built-in dashboard](#dashboard) (or
+  call `button.press` on any event button — also from
+  `dashboard.example.yaml` if you prefer a hand-built view). Undo buttons
   decrement the counters (floored at 0).
 - Everything that works with native buttons works here: dashboards,
   scripts, automations, voice assistants.
@@ -154,8 +205,9 @@ For Zigbee2MQTT, trigger on the button's `action` and call the same
 
 Settings → Devices & services → Activity Tracker → Add Integration, add
 another child with a **different prefix** (enforced). Entities, devices
-and storage files are fully separated. Paste a second copy of the
-dashboard example with the other prefix.
+and storage files are fully separated. The [built-in dashboard](#dashboard)
+picks the new child up automatically (on 2025.x frontends, reopen the
+dashboard; on 2026.x it appears live).
 
 ## Options
 
@@ -185,6 +237,10 @@ notification follow the Home Assistant profile language automatically
 - The Polish baby-wording ("kupa (mała)", "siku", "karmienie po
   terminie", …) is a **draft awaiting native-speaker review**; comment on
   the repository if something sounds off.
+- The **strategy dashboard's** card titles and labels (button names,
+  chart titles, "Next feeding in …", …) are English in v1, like
+  `dashboard.example.yaml`; translate the strings in
+  `activity_tracker/frontend/activity-tracker-strategy.js` if needed.
 
 ## Migration from the YAML package
 
@@ -199,8 +255,10 @@ notification follow the Home Assistant profile language automatically
 3. Rewire any button automations from the generated scripts
    (`script.rob_log_poo_small`) to `button.press` on the new entities
    (see the ZHA example above).
-4. Replace the dashboard view with `dashboard.example.yaml` (same layout,
-   new entity domains). The four `statistics-graph` cards reference the
+4. Replace the dashboard view: either delete it and create the
+   [built-in strategy dashboard](#dashboard), or paste
+   `dashboard.example.yaml` (same layout, new entity domains) into an
+   existing view. The four `statistics-graph` cards reference the
    identical `sensor.<p>_<activity>_total` ids, so charts keep their
    history.
 
@@ -229,11 +287,13 @@ integration — averages begin anew.
 ```
 integration/
   activity_tracker/      the component (copy to /config/custom_components/)
+    frontend/            the dashboard strategy JS (served + auto-loaded)
   custom_components/     test-only package: makes the loader see the component
   tests/                 pytest suite (config flow, entities, feeding, logic,
-                         localization)
+                         localization, dashboard strategy registration)
   conftest.py            wires the pytest-homeassistant-custom-component harness
-  dashboard.example.yaml dashboard example
+  dashboard.example.yaml dashboard example (fallback/reference for the
+                         built-in strategy dashboard)
 ```
 
 Run the tests with the pinned harness:
@@ -255,7 +315,11 @@ available Python 3.12). The integration itself targets current HA
 (2026.11): `voluptuous` schemas keep working there (HA aliases the module
 to its replacement), and the entity-id / options-flow mechanics were
 checked against the 2026.11 sources. `python3 -m py_compile` every
-`.py` and `json.load` every JSON file as a final check.
+`.py` and `json.load` every JSON file as a final check. The dashboard
+tests additionally need `home-assistant-frontend` installed in the venv
+(and `pycares<4.5`, whose later versions start a background thread the
+harness's thread check rejects); `node --check` validates the strategy
+JS.
 
 The `documentation` / `issue_tracker` URLs in `manifest.json` point at
 this repository; adjust them if you fork.
@@ -265,4 +329,4 @@ this repository; adjust them if you fork.
 Delete the child entry (Settings → Devices & services → Activity Tracker →
 the child → Delete; this removes the device and the per-child storage
 file), delete `/config/custom_components/activity_tracker/`, restart, and
-remove the dashboard view.
+delete the strategy dashboard if you created it.
