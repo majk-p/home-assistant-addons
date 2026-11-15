@@ -1,0 +1,92 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dodaj dziecko",
+        "description": "Jedno dziecko = jeden wpis Activity Tracker. Zdarzenia zapisujesz przyciskami; liczniki, wykresy i przypomnienia o karmieniu są liczone lokalnie. Bez usług zewnętrznych.",
+        "data": {
+          "name": "Imię",
+          "prefix": "Prefiks",
+          "feeding_interval_hours": "Odstęp między karmieniami (godziny)",
+          "notify_targets": "Cele powiadomień"
+        },
+        "data_description": {
+          "name": "Nazwa wyświetlana używana w nazwach encji, w urządzeniu i w powiadomieniach. Dowolny tekst, np. Robert.",
+          "prefix": "Używany we wszystkich identyfikatorach encji, np. button.rob_feeding. Pozostaw puste, aby wygenerować go z imienia. Tylko małe litery, cyfry i podkreślniki.",
+          "feeding_interval_hours": "Docelowy odstęp między karmieniami w godzinach (1–6, krok 0,25). Później edytowalny z encji number lub tutaj.",
+          "notify_targets": "Opcjonalne. Encje notify rozdzielone przecinkami, powiadamiane gdy karmienie jest po terminie, np. notify.mobile_app_tata, notify.mobile_app_mama."
+        }
+      }
+    },
+    "error": {
+      "invalid_name": "Podaj imię.",
+      "invalid_interval": "Odstęp między karmieniami musi mieścić się w przedziale od 1 do 6 godzin.",
+      "invalid_targets": "Cele powiadomień muszą być identyfikatorami encji notify.* rozdzielonymi przecinkami."
+    },
+    "abort": {
+      "already_configured": "Dziecko z tym prefiksem jest już skonfigurowane."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Edytuj dziecko",
+        "description": "Zmiana imienia, prefiksu lub celów powiadomień przeładuje encje tego dziecka. Zmiana prefiksu zmienia wszystkie identyfikatory encji (statystyki długoterminowe są powiązane z identyfikatorami); odstęp między karmieniami działa natychmiast.",
+        "data": {
+          "name": "Imię",
+          "prefix": "Prefiks",
+          "feeding_interval_hours": "Odstęp między karmieniami (godziny)",
+          "notify_targets": "Cele powiadomień"
+        },
+        "data_description": {
+          "name": "Nazwa wyświetlana używana w nazwach encji, w urządzeniu i w powiadomieniach. Dowolny tekst, np. Robert.",
+          "prefix": "Używany we wszystkich identyfikatorach encji, np. button.rob_feeding. Pozostaw puste, aby wygenerować go z imienia. Tylko małe litery, cyfry i podkreślniki.",
+          "feeding_interval_hours": "Docelowy odstęp między karmieniami w godzinach (1–6, krok 0,25). Działa natychmiast, gdy encja number istnieje.",
+          "notify_targets": "Opcjonalne. Encje notify rozdzielone przecinkami, powiadamiane gdy karmienie jest po terminie, np. notify.mobile_app_tata, notify.mobile_app_mama."
+        }
+      }
+    },
+    "error": {
+      "invalid_name": "Podaj imię.",
+      "invalid_interval": "Odstęp między karmieniami musi mieścić się w przedziale od 1 do 6 godzin.",
+      "invalid_targets": "Cele powiadomień muszą być identyfikatorami encji notify.* rozdzielonymi przecinkami.",
+      "duplicate_prefix": "Inne dziecko już używa tego prefiksu."
+    }
+  },
+  "entity": {
+    "button": {
+      "feeding": {"name": "{child_name} karmienie"},
+      "feeding_undo": {"name": "{child_name} karmienie (cofnięcie)"},
+      "pee": {"name": "{child_name} siku"},
+      "pee_undo": {"name": "{child_name} siku (cofnięcie)"},
+      "poo_small": {"name": "{child_name} kupa (mała)"},
+      "poo_small_undo": {"name": "{child_name} kupa (mała) (cofnięcie)"},
+      "poo_large": {"name": "{child_name} kupa (duża)"},
+      "poo_large_undo": {"name": "{child_name} kupa (duża) (cofnięcie)"}
+    },
+    "sensor": {
+      "feeding_total": {"name": "{child_name} karmienie razem"},
+      "feeding_today": {"name": "{child_name} karmienie dziś"},
+      "feeding_last": {"name": "{child_name} karmienie ostatnie"},
+      "feeding_daily_avg": {"name": "{child_name} karmienie średnia dzienna"},
+      "pee_total": {"name": "{child_name} siku razem"},
+      "pee_today": {"name": "{child_name} siku dziś"},
+      "pee_last": {"name": "{child_name} siku ostatnie"},
+      "pee_daily_avg": {"name": "{child_name} siku średnia dzienna"},
+      "poo_small_total": {"name": "{child_name} kupa (mała) razem"},
+      "poo_small_today": {"name": "{child_name} kupa (mała) dziś"},
+      "poo_small_last": {"name": "{child_name} kupa (mała) ostatnie"},
+      "poo_small_daily_avg": {"name": "{child_name} kupa (mała) średnia dzienna"},
+      "poo_large_total": {"name": "{child_name} kupa (duża) razem"},
+      "poo_large_today": {"name": "{child_name} kupa (duża) dziś"},
+      "poo_large_last": {"name": "{child_name} kupa (duża) ostatnie"},
+      "poo_large_daily_avg": {"name": "{child_name} kupa (duża) średnia dzienna"}
+    },
+    "number": {
+      "feeding_interval_hours": {"name": "{child_name} odstęp między karmieniami (godziny)"}
+    },
+    "binary_sensor": {
+      "feeding_due": {"name": "{child_name} karmienie po terminie"}
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a child",
+        "description": "One Activity Tracker entry per child. Events are logged with button presses; counts, charts and feeding reminders are computed locally. No external services.",
+        "data": {
+          "name": "Name",
+          "prefix": "Entity prefix",
+          "feeding_interval_hours": "Feeding interval (hours)",
+          "notify_targets": "Notify targets"
+        },
+        "data_description": {
+          "name": "Display name used in entity names, the device and notifications. Any text, e.g. Robert.",
+          "prefix": "Used in all entity IDs, e.g. button.rob_feeding. Leave empty to derive it from the name. Lowercase letters, digits and underscores only.",
+          "feeding_interval_hours": "Target hours between feedings (1-6, step 0.25). Editable later from the number entity or here.",
+          "notify_targets": "Optional. Comma-separated notify entities notified when a feeding is overdue, e.g. notify.mobile_app_dad, notify.mobile_app_mom."
+        }
+      }
+    },
+    "error": {
+      "invalid_name": "Enter a name.",
+      "invalid_interval": "The feeding interval must be between 1 and 6 hours.",
+      "invalid_targets": "Notify targets must be comma-separated notify.* entity IDs."
+    },
+    "abort": {
+      "already_configured": "A child with this prefix is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Edit child",
+        "description": "Changing the name, prefix or notify targets reloads this child's entities. Changing the prefix changes all entity IDs (long-term statistics follow entity IDs); the feeding interval is applied live.",
+        "data": {
+          "name": "Name",
+          "prefix": "Entity prefix",
+          "feeding_interval_hours": "Feeding interval (hours)",
+          "notify_targets": "Notify targets"
+        },
+        "data_description": {
+          "name": "Display name used in entity names, the device and notifications. Any text, e.g. Robert.",
+          "prefix": "Used in all entity IDs, e.g. button.rob_feeding. Leave empty to derive it from the name. Lowercase letters, digits and underscores only.",
+          "feeding_interval_hours": "Target hours between feedings (1-6, step 0.25). Applies live when the number entity exists.",
+          "notify_targets": "Optional. Comma-separated notify entities notified when a feeding is overdue, e.g. notify.mobile_app_dad, notify.mobile_app_mom."
+        }
+      }
+    },
+    "error": {
+      "invalid_name": "Enter a name.",
+      "invalid_interval": "The feeding interval must be between 1 and 6 hours.",
+      "invalid_targets": "Notify targets must be comma-separated notify.* entity IDs.",
+      "duplicate_prefix": "Another child already uses this prefix."
+    }
+  },
+  "entity": {
+    "button": {
+      "feeding": {"name": "{child_name} feeding"},
+      "feeding_undo": {"name": "{child_name} feeding undo"},
+      "pee": {"name": "{child_name} pee"},
+      "pee_undo": {"name": "{child_name} pee undo"},
+      "poo_small": {"name": "{child_name} poo (small)"},
+      "poo_small_undo": {"name": "{child_name} poo (small) undo"},
+      "poo_large": {"name": "{child_name} poo (large)"},
+      "poo_large_undo": {"name": "{child_name} poo (large) undo"}
+    },
+    "sensor": {
+      "feeding_total": {"name": "{child_name} feeding total"},
+      "feeding_today": {"name": "{child_name} feeding today"},
+      "feeding_last": {"name": "{child_name} feeding last"},
+      "feeding_daily_avg": {"name": "{child_name} feeding daily avg"},
+      "pee_total": {"name": "{child_name} pee total"},
+      "pee_today": {"name": "{child_name} pee today"},
+      "pee_last": {"name": "{child_name} pee last"},
+      "pee_daily_avg": {"name": "{child_name} pee daily avg"},
+      "poo_small_total": {"name": "{child_name} poo (small) total"},
+      "poo_small_today": {"name": "{child_name} poo (small) today"},
+      "poo_small_last": {"name": "{child_name} poo (small) last"},
+      "poo_small_daily_avg": {"name": "{child_name} poo (small) daily avg"},
+      "poo_large_total": {"name": "{child_name} poo (large) total"},
+      "poo_large_today": {"name": "{child_name} poo (large) today"},
+      "poo_large_last": {"name": "{child_name} poo (large) last"},
+      "poo_large_daily_avg": {"name": "{child_name} poo (large) daily avg"}
+    },
+    "number": {
+      "feeding_interval_hours": {"name": "{child_name} feeding interval"}
+    },
+    "binary_sensor": {
+      "feeding_due": {"name": "{child_name} feeding due"}
+    }
+  }
+}
