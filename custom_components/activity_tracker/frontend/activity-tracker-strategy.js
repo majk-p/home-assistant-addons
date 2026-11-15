@@ -479,12 +479,10 @@ function registerStrategy() {
   customElements.define(ELEMENT_TAG, ActivityTrackerDashboardStrategy);
 }
 
-if (typeof window.loadCardHelpers === "function") {
-  // Make sure the dashboard machinery is ready before defining the element
-  // (harmless for strategies, matches the custom-card conventions).
-  Promise.resolve(window.loadCardHelpers())
-    .catch(() => {})
-    .then(registerStrategy);
-} else {
-  registerStrategy();
-}
+// Define the element SYNCHRONOUSLY at script load. A dashboard strategy
+// extends HTMLElement and needs no card helpers, so waiting for
+// window.loadCardHelpers() (a custom-CARD convention) only risks losing the
+// 5-second customElements.whenDefined() race in HA's Add-dashboard flow,
+// which then throws "Timeout waiting for strategy element" and aborts the
+// dashboard creation silently.
+registerStrategy();
